@@ -118,38 +118,26 @@ class MeinSweep {
     });
   }
 
-  getNeighbors(id, range = 1) {
+  getNeighbors(id) {
     const { x, y } = this.getCartesian(id);
 
-    const neighboringCoordinates = [...new Array(range)].flatMap((_, i) => {
-      // we don't need
-      i++;
+    const offset = 1;
 
-      return [
-        { x: x - i, y: y + i },
-        { x: x + i, y: y + i },
-        { x: x - i, y: y - i },
-        { x: x + i, y: y - i },
-        { x: x, y: y + i },
-        { x: x, y: y - i },
-        { x: x - i, y: y },
-        { x: x + i, y: y },
-      ].filter(
-        ({ x: nx, y: ny }) =>
-          nx >= 0 && nx < this.size && ny >= 0 && ny < this.size
-      );
-    });
-
-    return (
-      neighboringCoordinates
-        .map(({ x, y }) => {
-          const nId = this.getOneDimensional(x, y);
-
-          return this.field.get(nId);
-        })
-        // clear undefined
-        .filter((def) => def)
+    const neighboringCoordinates = [
+      { x: x - offset, y: y + offset },
+      { x: x + offset, y: y + offset },
+      { x: x - offset, y: y - offset },
+      { x: x + offset, y: y - offset },
+      { x: x, y: y + offset },
+      { x: x, y: y - offset },
+      { x: x - offset, y: y },
+      { x: x + offset, y: y },
+    ].filter(
+      ({ x: nx, y: ny }) =>
+        nx >= 0 && nx < this.size && ny >= 0 && ny < this.size
     );
+
+    return neighboringCoordinates.map((cartesian) => this.getTile(cartesian));
   }
 
   populateMines() {
