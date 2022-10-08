@@ -187,21 +187,21 @@ class MeinSweep {
     );
   }
 
+  revealMines() {
+    this.field.forEach((tile) => tile.hasMine && tile.explore());
+  }
+
   lose() {
     this.state = this.gameStates.lose;
-
-    this.field.forEach((tile) => tile.hasMine && tile.explore());
-
+    this.revealMines();
     this.endTime = Date.now();
-
     if (this.onLose) this.onLose();
   }
 
   win() {
     this.state = this.gameStates.win;
-
+    this.revealMines();
     this.endTime = Date.now();
-
     if (this.onWin) this.onWin();
   }
 
