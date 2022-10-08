@@ -142,7 +142,7 @@ class MeinSweep {
   }
 
   populateMines() {
-    const maxIterationDepth = Math.pow(this.size, 2) * 4;
+    const maxIterationDepth = Math.pow(this.size, 2) * 10;
     let iterationCount = 0;
 
     let placedMines = 0;
