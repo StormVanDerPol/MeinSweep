@@ -242,6 +242,8 @@ class MeinSweep {
     if (tile.hasMine) {
       tile.isExploded = true;
       this.lose();
+
+      return;
     }
 
     this.check(tile.id);
