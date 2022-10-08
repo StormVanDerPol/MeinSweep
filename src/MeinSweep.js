@@ -12,6 +12,7 @@ class MeinTile {
   neighbours = [];
   isExplored = false;
   isFlagged = false;
+  isExploded = false;
 
   onUpdate = null;
 
@@ -113,13 +114,13 @@ class MeinSweep {
     }
 
     this.field.forEach((tile) => {
-      const neighbours = this.getNeighbors(tile.id, 1);
+      const neighbours = this.getNeighbors(tile);
       tile.setNeighbours(neighbours);
     });
   }
 
-  getNeighbors(id) {
-    const { x, y } = this.getCartesian(id);
+  getNeighbors(tile) {
+    const { x, y } = tile;
 
     const offset = 1;
 
@@ -239,6 +240,7 @@ class MeinSweep {
     const tile = this.getTile(idOrCartesian);
 
     if (tile.hasMine) {
+      tile.isExploded = true;
       this.lose();
     }
 

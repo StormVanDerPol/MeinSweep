@@ -74,6 +74,9 @@
 
             if (tile.hasMine) {
               dom.innerText = "💣";
+              if (tile.isExploded) {
+                dom.innerText = "💥";
+              }
             } else if (!!tile.neighbouringMines) {
               dom.innerText = tile.neighbouringMines;
               dom.style.color = colormap[tile.neighbouringMines];
