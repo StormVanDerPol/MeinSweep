@@ -23,6 +23,10 @@
   <body>
     <button id="reset-button">Reset</button>
     <div id="status-label"></div>
+    <label for="size">size</label>
+    <input id="size" type="number" placeholder="size" value="10" />
+    <label for="amount">Amount of mines</label>
+    <input id="amount" type="number" placeholder="amount" value="10" />
     <div id="grid"></div>
   </body>
   <script type="module">
@@ -85,7 +89,25 @@
     mf.onWin = () => (statusLabel.innerText = "win!");
     mf.onLose = () => (statusLabel.innerText = "lost!");
 
-    const start = () => mf.start(10, 10);
+    const sizeInput = document.getElementById("size");
+    const amountInput = document.getElementById("amount");
+
+    let size = Number(sizeInput.getAttribute("value"));
+    let amount = Number(amountInput.getAttribute("value"));
+
+    sizeInput.addEventListener(
+      "change",
+      (e) => (size = Number(e.target.value))
+    );
+    amountInput.addEventListener(
+      "change",
+      (e) => (amount = Number(e.target.value))
+    );
+
+    const start = () => {
+      console.log({ size, amount });
+      mf.start(size, amount);
+    };
     start();
 
     document.getElementById("reset-button").addEventListener("click", start);

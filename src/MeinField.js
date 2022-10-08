@@ -9,6 +9,7 @@ function getOneDimensional(x, y, size) {
 class MeinTile {
   hasMine = false;
   neighbouringMines = 0;
+  neighbours = [];
   isExplored = false;
   isFlagged = false;
 
@@ -28,6 +29,10 @@ class MeinTile {
 
   incrementNeighbouringMines() {
     return ++this.neighbouringMines;
+  }
+
+  setNeighbours(neighbours) {
+    this.neighbours = neighbours;
   }
 
   explore() {
@@ -106,6 +111,11 @@ class MeinField {
     for (let i = 0; i < Math.pow(this.size, 2); i++) {
       this.field.set(i, new MeinTile(i, this));
     }
+
+    this.field.forEach((tile) => {
+      const neighbours = this.getNeighbors(tile.id, 1);
+      tile.setNeighbours(neighbours);
+    });
   }
 
   getNeighbors(id, range = 1) {
@@ -162,9 +172,8 @@ class MeinField {
       if (thisTile.hasMine) continue;
 
       thisTile.placeMine();
-      const neighbours = this.getNeighbors(id, 1);
 
-      neighbours.forEach((n) => n.incrementNeighbouringMines());
+      thisTile.neighbours.forEach((n) => n.incrementNeighbouringMines());
 
       placedMines++;
     }
@@ -199,13 +208,23 @@ class MeinField {
   check(id) {
     const tile = this.getTile(id);
 
-    if (tile.isExplored) return;
+    const openSet = [tile];
 
-    tile.explore();
+    const checkTileNonRecursive = () => {
+      const t = openSet.pop();
+      t.explore();
 
-    if (tile.neighbouringMines === 0) {
-      const neighbours = this.getNeighbors(tile.id);
-      neighbours.forEach((neighbour) => this.check(neighbour.id));
+      if (t.neighbouringMines === 0) {
+        t.neighbours.forEach((neighbour) => {
+          if (neighbour.isExplored) return;
+
+          openSet.push(neighbour);
+        });
+      }
+    };
+
+    while (openSet.length > 0) {
+      checkTileNonRecursive();
     }
   }
 
@@ -236,6 +255,8 @@ class MeinField {
     }
 
     this.check(tile.id);
+
+    console.log("DISCOVERED", idOrCartesian);
 
     if (this.checkWinCondition()) {
       this.win();
