@@ -2,7 +2,10 @@
   "name": "mein-sweep",
   "version": "0.0.1",
   "description": "Jawohl",
-  "main": "index.js",
+  "main": "index.html",
+  "targets": {
+    "main": false
+  },
   "license": "MIT",
   "devDependencies": {
     "parcel": "^2.7.0",
@@ -10,6 +13,6 @@
   },
   "scripts": {
     "example": "parcel serve ./example/index.html",
-    "deploy": "NODE_ENV=production parcel build ./example/index.html && gh pages -d dist"
+    "deploy": "NODE_ENV=production parcel build ./example/index.html && gh-pages -d dist"
   }
 }
