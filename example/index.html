@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>example</title>
+    <style>
+      body {
+        background-color: black;
+        color: azure;
+      }
+
+      #grid {
+        position: relative;
+        width: 640px;
+        height: 640px;
+        background-color: darkslategray;
+        margin: 16px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <button id="reset-button">Reset</button>
+    <div id="status-label"></div>
+    <div id="grid"></div>
+  </body>
+  <script type="module">
+    import MeinField from "../src/MeinField.js";
+
+    const grid = document.getElementById("grid");
+    const statusLabel = document.getElementById("status-label");
+
+    const mf = new MeinField();
+
+    const init = () => {
+      grid.innerHTML = "";
+      statusLabel.innerText = "\u00A0";
+
+      const tileSize = 640 / mf.size;
+
+      mf.field.forEach((tile) => {
+        const dom = document.createElement("button");
+        dom.style.boxSizing = "border-box";
+        dom.style.width = `${tileSize}px`;
+        dom.style.height = `${tileSize}px`;
+        dom.style.display = "inline-block";
+        dom.style.position = "absolute";
+        dom.style.left = `${tileSize * tile.x}px`;
+        dom.style.top = `${tileSize * tile.y}px`;
+
+        const updateTile = () => {
+          if (tile.isExplored) {
+            dom.style.backgroundColor = "lightgray";
+
+            if (tile.hasMine) {
+              dom.innerText = "BOMB";
+            } else if (!!tile.neighbouringMines) {
+              dom.innerText = tile.neighbouringMines;
+            }
+          } else if (tile.isFlagged) {
+            dom.innerText = "FLAG";
+          }
+        };
+
+        tile.onUpdate = updateTile;
+
+        const discover = () => {
+          mf.discover(tile.id);
+        };
+
+        const toggleFLag = (e) => {
+          e.preventDefault();
+          mf.toggleFlag(tile.id);
+        };
+
+        dom.addEventListener("click", discover);
+        dom.addEventListener("contextmenu", toggleFLag);
+
+        grid.append(dom);
+      });
+    };
+
+    mf.onStart = init;
+    mf.onWin = () => (statusLabel.innerText = "win!");
+    mf.onLose = () => (statusLabel.innerText = "lost!");
+
+    const start = () => mf.start(10, 10);
+    start();
+
+    document.getElementById("reset-button").addEventListener("click", start);
+  </script>
+</html>

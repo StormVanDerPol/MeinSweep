@@ -1,0 +1,13 @@
+{
+  "name": "mein-field",
+  "version": "0.0.1",
+  "description": "Jawohl",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "parcel": "^2.7.0"
+  },
+  "scripts": {
+    "example": "parcel serve ./example/index.html"
+  }
+}
