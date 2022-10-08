@@ -51,7 +51,7 @@ class MeinTile {
 /**
  *  ## relevant public API:
  *
- *  - `mf = new MineField();` to initialize.
+ *  - `mf = new MeinSweep();` to initialize.
  *  - `mf.start(size, mineAmount);` starts game. Can also be used to reset the game.
  *  - iterate over `mf.field` to render your tiles, contains a `Map` of `MeinTile` objects
  *  - `mf.discover(idOrCartesian)` to discover the contents of a tile, click bomb, u lose.
@@ -59,13 +59,13 @@ class MeinTile {
  *
  *  ## game events useful to react to:
  *
- *  - `MeinField.onWin();`
- *  - `MeinField.onLose();`
- *  - `MeinField.onStart();` triggers after starting the game. More often than not you want to do UI stuff at his point. You call mf.start() yourself so it's not super usefull.
+ *  - `MeinSweep.onWin();`
+ *  - `MeinSweep.onLose();`
+ *  - `MeinSweep.onStart();` triggers after starting the game. More often than not you want to do UI stuff at his point. You call mf.start() yourself so it's not super usefull.
  *  - `MeinTile.onUpdate();` triggers when revealing a tile, either through clicking or through other means. Useful for re-rendering specific tiles.
  */
 
-class MeinField {
+class MeinSweep {
   size = 0;
   mineAmount = 0;
   field = new Map();
@@ -256,12 +256,10 @@ class MeinField {
 
     this.check(tile.id);
 
-    console.log("DISCOVERED", idOrCartesian);
-
     if (this.checkWinCondition()) {
       this.win();
     }
   }
 }
 
-export default MeinField;
+export default MeinSweep;

@@ -13,8 +13,6 @@
 
       #grid {
         position: relative;
-        width: 640px;
-        height: 640px;
         background-color: darkslategray;
         margin: 16px auto;
       }
@@ -30,20 +28,37 @@
     <div id="grid"></div>
   </body>
   <script type="module">
-    import MeinField from "../src/MeinField.js";
+    import MeinSweep from "../src/MeinSweep.js";
 
     const grid = document.getElementById("grid");
     const statusLabel = document.getElementById("status-label");
 
-    const mf = new MeinField();
+    const meinSweep = new MeinSweep();
 
     const init = () => {
       grid.innerHTML = "";
       statusLabel.innerText = "\u00A0";
 
-      const tileSize = 640 / mf.size;
+      const boardSize = 32 * meinSweep.size;
 
-      mf.field.forEach((tile) => {
+      const tileSize = boardSize / meinSweep.size;
+
+      grid.style.width = `${boardSize}px`;
+      grid.style.height = `${boardSize}px`;
+
+      const colormap = Object.freeze({
+        0: "initial",
+        1: "blue",
+        2: "green",
+        3: "yellow",
+        4: "tomato",
+        5: "red",
+        6: "darkred",
+        7: "purple",
+        8: "black",
+      });
+
+      meinSweep.field.forEach((tile) => {
         const dom = document.createElement("button");
         dom.style.boxSizing = "border-box";
         dom.style.width = `${tileSize}px`;
@@ -58,24 +73,25 @@
             dom.style.backgroundColor = "lightgray";
 
             if (tile.hasMine) {
-              dom.innerText = "BOMB";
+              dom.innerText = "💣";
             } else if (!!tile.neighbouringMines) {
               dom.innerText = tile.neighbouringMines;
+              dom.style.color = colormap[tile.neighbouringMines];
             }
           } else if (tile.isFlagged) {
-            dom.innerText = "FLAG";
+            dom.innerText = "🏳️‍⚧️";
           }
         };
 
         tile.onUpdate = updateTile;
 
         const discover = () => {
-          mf.discover(tile.id);
+          meinSweep.discover(tile.id);
         };
 
         const toggleFLag = (e) => {
           e.preventDefault();
-          mf.toggleFlag(tile.id);
+          meinSweep.toggleFlag(tile.id);
         };
 
         dom.addEventListener("click", discover);
@@ -85,9 +101,9 @@
       });
     };
 
-    mf.onStart = init;
-    mf.onWin = () => (statusLabel.innerText = "win!");
-    mf.onLose = () => (statusLabel.innerText = "lost!");
+    meinSweep.onStart = init;
+    meinSweep.onWin = () => (statusLabel.innerText = "win!");
+    meinSweep.onLose = () => (statusLabel.innerText = "lost!");
 
     const sizeInput = document.getElementById("size");
     const amountInput = document.getElementById("amount");
@@ -105,11 +121,12 @@
     );
 
     const start = () => {
-      console.log({ size, amount });
-      mf.start(size, amount);
+      meinSweep.start(size, amount);
     };
     start();
 
     document.getElementById("reset-button").addEventListener("click", start);
+
+    console.log("'Ello 🕺");
   </script>
 </html>
