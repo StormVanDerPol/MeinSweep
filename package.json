@@ -5,9 +5,11 @@
   "main": "index.js",
   "license": "MIT",
   "devDependencies": {
-    "parcel": "^2.7.0"
+    "parcel": "^2.7.0",
+    "gh-pages": "^4.0.0"
   },
   "scripts": {
-    "example": "parcel serve ./example/index.html"
+    "example": "parcel serve ./example/index.html",
+    "deploy": "NODE_ENV=production parcel build ./example/index.html && gh pages -d dist"
   }
 }
